@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farad Smart Logistics</title>
+  <style>
+    :root { --bg:#071013; --panel:#102026; --text:#f8fafc; --muted:#9fb3bf; --brand:#22c55e; --blue:#38bdf8; --warn:#f59e0b; --bad:#ef4444; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter,system-ui,Arial,sans-serif; background:radial-gradient(circle at 80% 0,#0f766e55,transparent 30%),var(--bg); color:var(--text); }
+    main { max-width:1180px; margin:auto; padding:42px 20px; }
+    header { display:flex; justify-content:space-between; gap:20px; align-items:flex-start; margin-bottom:28px; }
+    h1 { font-size:clamp(38px,6vw,70px); line-height:.95; margin:0; letter-spacing:-.06em; }
+    p { color:var(--muted); font-size:18px; line-height:1.6; max-width:700px; }
+    .badge { padding:9px 14px; border:1px solid #ffffff22; border-radius:999px; color:#bbf7d0; background:#ffffff0d; font-weight:800; }
+    .layout { display:grid; grid-template-columns: 1.25fr .75fr; gap:18px; }
+    .card { background:#ffffff0d; border:1px solid #ffffff1a; border-radius:28px; padding:22px; box-shadow:0 24px 80px #0008; }
+    .metrics { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:18px; }
+    .metric { background:#071013; border:1px solid #ffffff18; border-radius:22px; padding:18px; }
+    .metric span { color:var(--muted); font-size:12px; font-weight:900; text-transform:uppercase; }
+    .metric strong { display:block; margin-top:8px; font-size:28px; }
+    .route { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:14px; padding:16px; border:1px solid #ffffff14; border-radius:20px; margin:12px 0; background:#071013; }
+    .arrow { color:var(--brand); font-weight:900; }
+    .fleet { display:grid; gap:12px; }
+    .truck { padding:15px; border-radius:18px; background:#071013; border:1px solid #ffffff14; display:flex; justify-content:space-between; }
+    button { width:100%; border:0; border-radius:18px; padding:15px 18px; background:linear-gradient(135deg,var(--brand),var(--blue)); color:#061014; font-weight:900; cursor:pointer; margin-top:14px; }
+    .map { height:260px; border-radius:24px; background:linear-gradient(135deg,#064e3b,#082f49); position:relative; overflow:hidden; }
+    .dot { position:absolute; width:16px; height:16px; background:#bbf7d0; border-radius:50%; box-shadow:0 0 30px #22c55e; }
+    .line { position:absolute; height:3px; background:#bbf7d099; transform-origin:left; }
+    @media(max-width:850px){ header,.layout,.metrics{grid-template-columns:1fr; display:grid;} }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <div class="badge">Operations Command Center</div>
+      <h1>Farad Smart Logistics</h1>
+      <p>Plan shipments, monitor fleet health, and surface delivery risks from one clean logistics dashboard.</p>
+    </div>
+  </header>
+  <section class="metrics">
+    <div class="metric"><span>Active routes</span><strong id="routes">12</strong></div>
+    <div class="metric"><span>On-time rate</span><strong>94%</strong></div>
+    <div class="metric"><span>Fleet online</span><strong>28</strong></div>
+    <div class="metric"><span>Risk alerts</span><strong id="risk">3</strong></div>
+  </section>
+  <section class="layout">
+    <div class="card">
+      <h2>Route planner</h2>
+      <div class="map">
+        <div class="dot" style="left:12%;top:30%"></div><div class="dot" style="left:58%;top:46%"></div><div class="dot" style="left:82%;top:64%"></div>
+        <div class="line" style="left:15%;top:34%;width:300px;transform:rotate(15deg)"></div><div class="line" style="left:60%;top:50%;width:170px;transform:rotate(20deg)"></div>
+      </div>
+      <div id="routeList"></div>
+      <button onclick="optimize()">Optimize route plan</button>
+    </div>
+    <aside class="card">
+      <h2>Fleet status</h2>
+      <div class="fleet" id="fleet"></div>
+    </aside>
+  </section>
+</main>
+<script>
+const routes=[['Ikeja Hub','Lekki Dropoff','Clear'],['Apapa Port','Abeokuta','Fuel delay'],['Yaba Warehouse','VI Client','Clear']];
+const trucks=[['Truck FRD-104','Online'],['Van FRD-221','Loading'],['Bike FRD-018','Delivering'],['Truck FRD-309','Maintenance']];
+function render(){
+  routeList.innerHTML=routes.map(r=>`<div class="route"><strong>${r[0]}</strong><span class="arrow">→</span><strong>${r[1]}</strong><small style="color:${r[2]==='Clear'?'#22c55e':'#f59e0b'}">${r[2]}</small></div>`).join('');
+  fleet.innerHTML=trucks.map(t=>`<div class="truck"><strong>${t[0]}</strong><span>${t[1]}</span></div>`).join('');
+}
+function optimize(){ routes.sort((a,b)=>a[2]==='Clear'?-1:1); risk.textContent='1'; render(); }
+render();
+</script>
+</body>
+</html>
